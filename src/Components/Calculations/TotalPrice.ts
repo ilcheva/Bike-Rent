@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import UserData from '../LocalStorage/UserData';
 import DataInterface from '../Types/Types';
 
 let initv = {
@@ -8,13 +9,13 @@ let initv = {
 export default function TotalPrice(periods: DataInterface[]) {
 
     let pricePerDay: { [key: string]: number } = {};
-    console.log(periods)
+
     let earliest = periods.reduce(function (pre, cur) {
         return dayjs(pre.from) < dayjs(cur.from) ? pre : cur;
     }, initv);
     let last = periods.reduce(function (pre, cur) {
         return dayjs(pre.to) < dayjs(cur.to) ? cur : pre;
-    });
+    }, UserData());
 
     periods.sort((a, b) => a.added.localeCompare(b.added));
     periods.forEach((period) => {
@@ -29,13 +30,11 @@ export default function TotalPrice(periods: DataInterface[]) {
     });
 
     let allPrice = 0;
-    if (pricePerDay === null) {
-        return allPrice;
-    } else {
+   
 
         let earliestDate = dayjs(earliest.from)
         while (earliestDate <= dayjs(last.to)) {
-            console.log(earliestDate)
+
             let dateStr = earliestDate.format("DD-MM-YYYY");
 
             let currentPrice = 0
@@ -52,9 +51,8 @@ export default function TotalPrice(periods: DataInterface[]) {
 
             earliestDate = earliestDate.add(1, "day");
         }
-    }
-    console.log('totalprice', pricePerDay)
-    console.log(allPrice)
+    
+
     return allPrice;
 
 
