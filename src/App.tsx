@@ -21,7 +21,6 @@ function App() {
     const [data, setData] = useState<any[]>(UserData());
 
     const addData = (value: {}) => {
-        console.log(value);
         setData([...data, value]);
     };
 
